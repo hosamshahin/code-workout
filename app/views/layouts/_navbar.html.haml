@@ -5,20 +5,6 @@
     .navbar-collapse.collapse
       %ul.nav.navbar-nav.nav-top
         %li.dropdown
-          %a.dropdown-toggle{ href: gym_url,
-            data: { toggle: 'dropdown' }, value: 'Gym' }
-            Gym
-          %ul.dropdown-menu
-            %li
-              .yamm-content
-                %ul.list-unstyled
-                  %li
-                    %strong Workouts
-                  %li= link_to 'Browse all', workouts_path
-                  %li
-                    %strong Exercises
-                  %li= link_to 'Browse all', exercises_path
-        %li.dropdown
           %a.dropdown-toggle{ href: organizations_path,
             data: { toggle: 'dropdown' }, value: 'Course' }
             Course
@@ -37,7 +23,6 @@
                         organization_course_path(c.organization, c, term)
 
       %ul.nav.navbar-nav.navbar-right.nav-top
-        %li= render :partial => 'exercises/search'
         - if user_signed_in?
           - if current_user.global_role.can_edit_system_configuration?
             %li= link_to icon_tag_for('wrench'), admin_dashboard_path

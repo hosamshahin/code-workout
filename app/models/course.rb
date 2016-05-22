@@ -32,9 +32,9 @@ class Course < ActiveRecord::Base
 
   belongs_to  :organization, inverse_of: :courses
   has_many    :course_offerings, inverse_of: :course, dependent: :destroy
-  # Associating with exercises through course_exercises
-  has_many    :course_exercises, inverse_of: :course, dependent: :destroy
-  has_many    :exercises, through: :course_exercises
+  # # Associating with exercises through course_exercises
+  # has_many    :course_exercises, inverse_of: :course, dependent: :destroy
+  # has_many    :exercises, through: :course_exercises
 
   #Kaminari for the show method
   paginates_per 100
