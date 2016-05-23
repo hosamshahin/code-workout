@@ -4,6 +4,9 @@ class LatePolicy < ActiveRecord::Base
   has_many :course_offerings,
     inverse_of: :late_policy,
     dependent: :destroy
+  has_many :courses, :through => :course_offerings
+  has_many :terms, :through => :course_offerings
+
 
   #~ Validation ...............................................................
 
