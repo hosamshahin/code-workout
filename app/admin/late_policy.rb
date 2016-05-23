@@ -14,11 +14,4 @@ ActiveAdmin.register LatePolicy do
     actions
   end
 
-  # sidebar 'Courses', only: :show do
-  #   table_for organization.courses do
-  #     column :number
-  #     column(:name) { |c| link_to c.name, admin_course_path(c) }
-  #   end
-  # end
-
 end

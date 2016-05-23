@@ -25,6 +25,8 @@ CodeWorkout::Application.routes.draw do
   # routes, since our user ids and file ids use restricted characters
   get '/admin/users/:id/edit(.:format)' => 'admin/users#edit',
     constraints: { id: /[^\/]+/ }
+  get '/admin/users/:id/edit_access(.:format)' => 'admin/users#edit_access',
+    constraints: { id: /[^\/]+/ }
   get '/admin/users/:id' => 'admin/users#show',
     constraints: { id: /[^\/]+/ }
   patch '/admin/users/:id' => 'admin/users#update',

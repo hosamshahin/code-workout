@@ -31,6 +31,14 @@ namespace :db do
       course_offering: c,
       course_role: CourseRole.instructor)
 
+    FactoryGirl.create(:course_enrollment,
+      user: FactoryGirl.create(:instructor_user,
+        first_name: 'Ima2',
+        last_name:  'Teacher2',
+        email:      "example-1-2@railstutorial.org"),
+      course_offering: c,
+      course_role: CourseRole.instructor)
+
     50.times do |n|
       FactoryGirl.create(:course_enrollment,
         user: FactoryGirl.create(:confirmed_user,

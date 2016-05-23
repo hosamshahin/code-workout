@@ -68,7 +68,7 @@ class User < ActiveRecord::Base
   # has_many    :workout_offerings, through: :student_extensions
   # belongs_to  :current_workout_score, class_name: 'WorkoutScore'
   # has_many   :test_case_results, inverse_of: :user, dependent: :destroy
-  has_many  :lms_accesses, inverse_of: :lms_instances
+  has_many  :lms_accesses, inverse_of: :user
 
   #~ Hooks ....................................................................
 
@@ -108,6 +108,9 @@ class User < ActiveRecord::Base
       "#{prefix}%")).reorder('email asc').pluck(:email)
   end
 
+  def self.instructors
+    User.where(global_role = GlobalRole.instructor)
+  end
 
   #~ Instance methods .........................................................
 

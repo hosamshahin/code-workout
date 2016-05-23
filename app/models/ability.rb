@@ -67,11 +67,7 @@ class Ability
         User,
         Course,
         CourseOffering,
-        CourseEnrollment,
-        Workout,
-        Exercise,
-        Attempt,
-        ResourceFile
+        CourseEnrollment
       ]
     end
 
@@ -83,7 +79,6 @@ class Ability
 
   end
 
-
   # -------------------------------------------------------------
   def process_instructor(user)
     if user.global_role.is_instructor? &&
@@ -91,9 +86,15 @@ class Ability
       # FIXME: The exercise/workout permissions need to be role-based
       # with respect to the course offering, rather than depending on the
       # global role.
-      can [:create], [Course, CourseOffering, CourseEnrollment]
+      can [:create], [Course, CourseOffering, CourseEnrollment, LmsAccess]
 
     end
+
+    if user.global_role.is_instructor?
+      # Everyone can manage their own LMS access_token
+      can :manage, LmsAccess, user_id: user.id
+    end
+
   end
 
 
@@ -105,6 +106,7 @@ class Ability
   def process_courses(user)
     if !user.global_role.can_edit_system_configuration? &&
       !user.global_role.can_manage_all_courses?
+
 
       # Everyone can manage their own course enrollments
       can :manage, CourseEnrollment, user_id: user.id

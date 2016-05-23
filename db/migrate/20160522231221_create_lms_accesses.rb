@@ -5,6 +5,5 @@ class CreateLmsAccesses < ActiveRecord::Migration
 
       t.timestamps
     end
-    add_index :lms_accesses, :access_token, unique: true
   end
 end

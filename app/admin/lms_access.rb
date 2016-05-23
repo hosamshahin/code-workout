@@ -1,4 +1,5 @@
 ActiveAdmin.register LmsAccess do
+  scope_to :current_user, unless: proc{ current_user.global_role.is_admin? }
   includes :lms_instance, :user
   active_admin_import
 
@@ -20,41 +21,15 @@ ActiveAdmin.register LmsAccess do
     actions
   end
 
-  # show do
-  #   attributes_table do
-  #     row :id
-  #     row :course
-  #     row :term
-  #     row :label
-  #     row(:url) { |c| link_to c.url, c.url }
-  #     row :self_enrollment_allowed
-  #     row :created_at
-  #     row :updated_at
-  #   end
-
-  #   panel 'Roster' do
-  #     table_for course_offering.students do
-  #       column :name, :display_name
-  #       column :email
-  #     end
-  #   end
-
-  # end
-
-  # sidebar 'Instructors', only: :show,
-  #   if: proc{ course_offering.instructors.any? } do
-  #   table_for course_offering.instructors do
-  #     column(:name) { |i| link_to i.display_name, admin_user_path(i) }
-  #     column(:email) { |i| link_to i.email, 'mailto:' + i.email }
-  #   end
-  # end
-
-  # sidebar 'Graders', only: :show,
-  #   if: proc{ course_offering.graders.any? } do
-  #   table_for course_offering.graders do
-  #     column(:name) { |i| link_to i.display_name, admin_user_path(i) }
-  #     column(:email) { |i| link_to i.email, 'mailto:' + i.email }
-  #   end
-  # end
-
+  form do |f|
+    f.semantic_errors
+    f.inputs do
+      f.input :lms_instance
+      if current_user.global_role.is_admin?
+        f.input :user
+      end
+      f.input :access_token
+    end
+    f.actions
+  end
 end

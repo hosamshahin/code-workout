@@ -3,7 +3,8 @@ class UsersController < InheritedResources::Base
 
 
   #~ Action methods ...........................................................
-
+  def edit_access
+  end
   # -------------------------------------------------------------
   # GET /users/1/performance
   def calc_performance

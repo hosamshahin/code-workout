@@ -255,7 +255,7 @@ ActiveRecord::Schema.define(version: 20160523150926) do
   end
 
   add_index "lms_accesses", ["access_token"], name: "index_lms_accesses_on_access_token", unique: true, using: :btree
-  add_index "lms_accesses", ["lms_instance_id"], name: "lms_accesses_lms_instance_id_fk", using: :btree
+  add_index "lms_accesses", ["lms_instance_id", "user_id"], name: "index_lms_accesses_on_lms_instance_id_and_user_id", unique: true, using: :btree
   add_index "lms_accesses", ["user_id"], name: "lms_accesses_user_id_fk", using: :btree
 
   create_table "lms_instances", force: true do |t|
