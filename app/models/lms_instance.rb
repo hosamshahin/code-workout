@@ -6,7 +6,12 @@ class LmsInstance < ActiveRecord::Base
 
   #~ Validation ...............................................................
 
-  validates_presence_of :name, :number, :organization
+  validates_presence_of :url
+
+
+  def display_name
+    "#{url}"
+  end
 
   #~ Private instance methods .................................................
 end
