@@ -10,6 +10,7 @@ namespace :db do
     FactoryGirl.create(:term400)
     FactoryGirl.create(:term500)
     FactoryGirl.create(:course)
+    FactoryGirl.create(:lms_instance)
     c = FactoryGirl.create(:course_offering_term_1_tr)
     FactoryGirl.create(:course_offering_term_1_mwf)
     FactoryGirl.create(:course_offering_term_2_tr)

@@ -3,6 +3,34 @@
 # the rake db:seed (or created alongside the db with db:setup).
 
 # ---------------------------------------------------------------
+# Create the default LMS types.
+#
+LmsType.delete_all
+
+LmsType.create!(
+  name:                          'Canvas')
+
+# ---------------------------------------------------------------
+# Create the default late policies.
+#
+LatePolicy.delete_all
+
+LatePolicy.create!(
+  name:                          '0_days',
+  late_days:                     0,
+  late_percent:                 0)
+
+LatePolicy.create!(
+  name:                          '3_days',
+  late_days:                     3,
+  late_percent:                 50)
+
+LatePolicy.create!(
+  name:                          '5_days',
+  late_days:                     5,
+  late_percent:                 50)
+
+# ---------------------------------------------------------------
 # Create the default built-in roles. The order of these must match the
 # order of the IDs in models/global_role.rb.
 #
@@ -54,11 +82,11 @@ CourseRole.create!(
   can_manage_assignments:     false,
   can_grade_submissions:      false,
   can_view_other_submissions: false)
-  
+
  # -----------------------------------------
  # Create the different timezone objects in
  # the timezones table
- 
+
 TimeZone.create!(
 name: 'America/New_York',
 zone: 'UTC -05:00',

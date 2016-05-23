@@ -1,10 +1,10 @@
 ActiveAdmin.register CourseOffering do
-  includes :course, :term
+  includes :course, :term, :late_policy
   active_admin_import
 
   menu parent: 'University-oriented', priority: 40
   permit_params :course_id, :term_id, :name, :label, :url,
-    :self_enrollment_allowed
+    :self_enrollment_allowed, :late_policy_id
 
   index do
     id_column
@@ -20,6 +20,7 @@ ActiveAdmin.register CourseOffering do
     column 'Self-enroll?', :self_enrollment_allowed
     column(:url) { |c| link_to c.url, c.url }
     column :created_at
+    column :late_policy, sortable: 'late_policy.name'
     actions
   end
 
