@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160523010223) do
+ActiveRecord::Schema.define(version: 20160523014940) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -104,17 +104,6 @@ ActiveRecord::Schema.define(version: 20160523010223) do
   add_index "errors", ["class_name"], name: "index_errors_on_class_name", using: :btree
   add_index "errors", ["created_at"], name: "index_errors_on_created_at", using: :btree
 
-  create_table "exercises", force: true do |t|
-    t.string   "name",               limit: 50,         null: false
-    t.string   "short_display_name", limit: 45
-    t.string   "ex_type",            limit: 50,         null: false
-    t.text     "description",        limit: 2147483647, null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "exercises", ["name"], name: "index_exercises_on_name", unique: true, using: :btree
-
   create_table "friendly_id_slugs", force: true do |t|
     t.string   "slug",                      null: false
     t.integer  "sluggable_id",              null: false
@@ -153,6 +142,9 @@ ActiveRecord::Schema.define(version: 20160523010223) do
     t.datetime "updated_at"
   end
 
+  add_index "inst_book_owners", ["book_role_id"], name: "inst_book_owners_book_role_id_fk", using: :btree
+  add_index "inst_book_owners", ["user_id"], name: "inst_book_owners_user_id_fk", using: :btree
+
   create_table "inst_book_section_exercises", force: true do |t|
     t.integer  "inst_book_id",                             null: false
     t.integer  "inst_section_id",                          null: false
@@ -161,6 +153,10 @@ ActiveRecord::Schema.define(version: 20160523010223) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "inst_book_section_exercises", ["inst_book_id"], name: "inst_book_section_exercises_inst_book_id_fk", using: :btree
+  add_index "inst_book_section_exercises", ["inst_exercise_id"], name: "inst_book_section_exercises_inst_exercise_id_fk", using: :btree
+  add_index "inst_book_section_exercises", ["inst_section_id"], name: "inst_book_section_exercises_inst_section_id_fk", using: :btree
 
   create_table "inst_books", force: true do |t|
     t.integer  "course_offering_id",            null: false
@@ -171,6 +167,9 @@ ActiveRecord::Schema.define(version: 20160523010223) do
     t.datetime "updated_at"
   end
 
+  add_index "inst_books", ["course_offering_id"], name: "inst_books_course_offering_id_fk", using: :btree
+  add_index "inst_books", ["inst_book_owner_id"], name: "inst_books_inst_book_owner_id_fk", using: :btree
+
   create_table "inst_chapter_modules", force: true do |t|
     t.integer  "inst_chapter_id", null: false
     t.integer  "inst_module_id",  null: false
@@ -178,6 +177,9 @@ ActiveRecord::Schema.define(version: 20160523010223) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "inst_chapter_modules", ["inst_chapter_id"], name: "inst_chapter_modules_inst_chapter_id_fk", using: :btree
+  add_index "inst_chapter_modules", ["inst_module_id"], name: "inst_chapter_modules_inst_module_id_fk", using: :btree
 
   create_table "inst_chapters", force: true do |t|
     t.integer  "inst_book_id",                        null: false
@@ -189,6 +191,19 @@ ActiveRecord::Schema.define(version: 20160523010223) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "inst_chapters", ["inst_book_id"], name: "inst_chapters_inst_book_id_fk", using: :btree
+
+  create_table "inst_exercises", force: true do |t|
+    t.string   "name",               limit: 50,         null: false
+    t.string   "short_display_name", limit: 45
+    t.string   "ex_type",            limit: 50,         null: false
+    t.text     "description",        limit: 2147483647, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "inst_exercises", ["name"], name: "index_inst_exercises_on_name", unique: true, using: :btree
 
   create_table "inst_modules", force: true do |t|
     t.integer  "inst_chapter_id", null: false
@@ -211,6 +226,9 @@ ActiveRecord::Schema.define(version: 20160523010223) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "inst_sections", ["inst_chapter_module_id"], name: "inst_sections_inst_chapter_module_id_fk", using: :btree
+  add_index "inst_sections", ["inst_module_id"], name: "inst_sections_inst_module_id_fk", using: :btree
 
   create_table "languages", force: true do |t|
     t.string   "name"
@@ -260,12 +278,15 @@ ActiveRecord::Schema.define(version: 20160523010223) do
 
   create_table "odsa_book_progresses", force: true do |t|
     t.integer  "user_id",                                     null: false
-    t.integer  "book_id",                                     null: false
+    t.integer  "inst_book_id",                                null: false
     t.text     "started_exercises",        limit: 2147483647, null: false
     t.text     "all_proficient_exercises", limit: 2147483647, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "odsa_book_progresses", ["inst_book_id"], name: "odsa_book_progresses_inst_book_id_fk", using: :btree
+  add_index "odsa_book_progresses", ["user_id"], name: "odsa_book_progresses_user_id_fk", using: :btree
 
   create_table "odsa_bugs", force: true do |t|
     t.integer  "user_id",                           null: false
@@ -295,6 +316,9 @@ ActiveRecord::Schema.define(version: 20160523010223) do
     t.datetime "updated_at"
   end
 
+  add_index "odsa_exercise_attempts", ["inst_book_section_exercise_id"], name: "odsa_exercise_attempts_inst_book_section_exercise_id_fk", using: :btree
+  add_index "odsa_exercise_attempts", ["user_id"], name: "odsa_exercise_attempts_user_id_fk", using: :btree
+
   create_table "odsa_exercise_progresses", force: true do |t|
     t.integer  "user_id",                                               null: false
     t.integer  "inst_book_section_exercise_id",                         null: false
@@ -310,6 +334,9 @@ ActiveRecord::Schema.define(version: 20160523010223) do
     t.datetime "updated_at"
   end
 
+  add_index "odsa_exercise_progresses", ["inst_book_section_exercise_id"], name: "odsa_exercise_progresses_inst_book_section_exercise_id_fk", using: :btree
+  add_index "odsa_exercise_progresses", ["user_id"], name: "odsa_exercise_progresses_user_id_fk", using: :btree
+
   create_table "odsa_module_progresses", force: true do |t|
     t.integer  "user_id",         null: false
     t.integer  "inst_book_id",    null: false
@@ -321,6 +348,10 @@ ActiveRecord::Schema.define(version: 20160523010223) do
     t.datetime "updated_at"
   end
 
+  add_index "odsa_module_progresses", ["inst_book_id"], name: "odsa_module_progresses_inst_book_id_fk", using: :btree
+  add_index "odsa_module_progresses", ["inst_module_id"], name: "odsa_module_progresses_inst_module_id_fk", using: :btree
+  add_index "odsa_module_progresses", ["user_id"], name: "odsa_module_progresses_user_id_fk", using: :btree
+
   create_table "odsa_student_extensions", force: true do |t|
     t.integer  "user_id"
     t.integer  "inst_section_id", null: false
@@ -331,6 +362,9 @@ ActiveRecord::Schema.define(version: 20160523010223) do
     t.integer  "time_limit"
     t.datetime "opening_date"
   end
+
+  add_index "odsa_student_extensions", ["inst_section_id"], name: "odsa_student_extensions_inst_section_id_fk", using: :btree
+  add_index "odsa_student_extensions", ["user_id"], name: "odsa_student_extensions_user_id_fk", using: :btree
 
   create_table "odsa_user_interactions", force: true do |t|
     t.integer  "inst_book_id",                                     null: false
@@ -350,6 +384,11 @@ ActiveRecord::Schema.define(version: 20160523010223) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "odsa_user_interactions", ["inst_book_id"], name: "odsa_user_interactions_inst_book_id_fk", using: :btree
+  add_index "odsa_user_interactions", ["inst_book_section_exercise_id"], name: "odsa_user_interactions_inst_book_section_exercise_id_fk", using: :btree
+  add_index "odsa_user_interactions", ["inst_section_id"], name: "odsa_user_interactions_inst_section_id_fk", using: :btree
+  add_index "odsa_user_interactions", ["user_id"], name: "odsa_user_interactions_user_id_fk", using: :btree
 
   create_table "organizations", force: true do |t|
     t.string   "name",         null: false
@@ -427,10 +466,49 @@ ActiveRecord::Schema.define(version: 20160523010223) do
 
   add_foreign_key "identities", "users", name: "identities_user_id_fk", dependent: :delete
 
+  add_foreign_key "inst_book_owners", "book_roles", name: "inst_book_owners_book_role_id_fk"
+  add_foreign_key "inst_book_owners", "users", name: "inst_book_owners_user_id_fk"
+
+  add_foreign_key "inst_book_section_exercises", "inst_books", name: "inst_book_section_exercises_inst_book_id_fk"
+  add_foreign_key "inst_book_section_exercises", "inst_exercises", name: "inst_book_section_exercises_inst_exercise_id_fk"
+  add_foreign_key "inst_book_section_exercises", "inst_sections", name: "inst_book_section_exercises_inst_section_id_fk"
+
+  add_foreign_key "inst_books", "course_offerings", name: "inst_books_course_offering_id_fk"
+  add_foreign_key "inst_books", "inst_book_owners", name: "inst_books_inst_book_owner_id_fk"
+
+  add_foreign_key "inst_chapter_modules", "inst_chapters", name: "inst_chapter_modules_inst_chapter_id_fk"
+  add_foreign_key "inst_chapter_modules", "inst_modules", name: "inst_chapter_modules_inst_module_id_fk"
+
+  add_foreign_key "inst_chapters", "inst_books", name: "inst_chapters_inst_book_id_fk"
+
+  add_foreign_key "inst_sections", "inst_chapter_modules", name: "inst_sections_inst_chapter_module_id_fk"
+  add_foreign_key "inst_sections", "inst_modules", name: "inst_sections_inst_module_id_fk"
+
   add_foreign_key "lms_accesses", "lms_instances", name: "lms_accesses_lms_instance_id_fk"
   add_foreign_key "lms_accesses", "users", name: "lms_accesses_user_id_fk"
 
   add_foreign_key "lms_instances", "lms_types", name: "lms_instances_lms_type_id_fk"
+
+  add_foreign_key "odsa_book_progresses", "inst_books", name: "odsa_book_progresses_inst_book_id_fk"
+  add_foreign_key "odsa_book_progresses", "users", name: "odsa_book_progresses_user_id_fk"
+
+  add_foreign_key "odsa_exercise_attempts", "inst_book_section_exercises", name: "odsa_exercise_attempts_inst_book_section_exercise_id_fk"
+  add_foreign_key "odsa_exercise_attempts", "users", name: "odsa_exercise_attempts_user_id_fk"
+
+  add_foreign_key "odsa_exercise_progresses", "inst_book_section_exercises", name: "odsa_exercise_progresses_inst_book_section_exercise_id_fk"
+  add_foreign_key "odsa_exercise_progresses", "users", name: "odsa_exercise_progresses_user_id_fk"
+
+  add_foreign_key "odsa_module_progresses", "inst_books", name: "odsa_module_progresses_inst_book_id_fk"
+  add_foreign_key "odsa_module_progresses", "inst_modules", name: "odsa_module_progresses_inst_module_id_fk"
+  add_foreign_key "odsa_module_progresses", "users", name: "odsa_module_progresses_user_id_fk"
+
+  add_foreign_key "odsa_student_extensions", "inst_sections", name: "odsa_student_extensions_inst_section_id_fk"
+  add_foreign_key "odsa_student_extensions", "users", name: "odsa_student_extensions_user_id_fk"
+
+  add_foreign_key "odsa_user_interactions", "inst_book_section_exercises", name: "odsa_user_interactions_inst_book_section_exercise_id_fk"
+  add_foreign_key "odsa_user_interactions", "inst_books", name: "odsa_user_interactions_inst_book_id_fk"
+  add_foreign_key "odsa_user_interactions", "inst_sections", name: "odsa_user_interactions_inst_section_id_fk"
+  add_foreign_key "odsa_user_interactions", "users", name: "odsa_user_interactions_user_id_fk"
 
   add_foreign_key "users", "global_roles", name: "users_global_role_id_fk"
   add_foreign_key "users", "time_zones", name: "users_time_zone_id_fk"

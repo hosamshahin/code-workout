@@ -9,3 +9,5 @@ class CreateInstModules < ActiveRecord::Migration
     end
   end
 end
+
+
