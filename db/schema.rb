@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160523003617) do
+ActiveRecord::Schema.define(version: 20160523010223) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -27,6 +27,16 @@ ActiveRecord::Schema.define(version: 20160523003617) do
   add_index "active_admin_comments", ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id", using: :btree
   add_index "active_admin_comments", ["namespace"], name: "index_active_admin_comments_on_namespace", using: :btree
   add_index "active_admin_comments", ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id", using: :btree
+
+  create_table "book_roles", force: true do |t|
+    t.string   "name",        limit: 45,                null: false
+    t.boolean  "can_modify",             default: true
+    t.boolean  "can_compile",            default: true
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "book_roles", ["name"], name: "index_book_roles_on_name", unique: true, using: :btree
 
   create_table "course_enrollments", force: true do |t|
     t.integer "user_id",            null: false
@@ -94,6 +104,17 @@ ActiveRecord::Schema.define(version: 20160523003617) do
   add_index "errors", ["class_name"], name: "index_errors_on_class_name", using: :btree
   add_index "errors", ["created_at"], name: "index_errors_on_created_at", using: :btree
 
+  create_table "exercises", force: true do |t|
+    t.string   "name",               limit: 50,         null: false
+    t.string   "short_display_name", limit: 45
+    t.string   "ex_type",            limit: 50,         null: false
+    t.text     "description",        limit: 2147483647, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "exercises", ["name"], name: "index_exercises_on_name", unique: true, using: :btree
+
   create_table "friendly_id_slugs", force: true do |t|
     t.string   "slug",                      null: false
     t.integer  "sluggable_id",              null: false
@@ -124,6 +145,72 @@ ActiveRecord::Schema.define(version: 20160523003617) do
 
   add_index "identities", ["uid", "provider"], name: "index_identities_on_uid_and_provider", using: :btree
   add_index "identities", ["user_id"], name: "index_identities_on_user_id", using: :btree
+
+  create_table "inst_book_owners", force: true do |t|
+    t.integer  "user_id",      null: false
+    t.integer  "book_role_id", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "inst_book_section_exercises", force: true do |t|
+    t.integer  "inst_book_id",                             null: false
+    t.integer  "inst_section_id",                          null: false
+    t.integer  "inst_exercise_id",                         null: false
+    t.decimal  "points",           precision: 5, scale: 2, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "inst_books", force: true do |t|
+    t.integer  "course_offering_id",            null: false
+    t.integer  "inst_book_owner_id",            null: false
+    t.string   "title",              limit: 50, null: false
+    t.string   "book_url",           limit: 80, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "inst_chapter_modules", force: true do |t|
+    t.integer  "inst_chapter_id", null: false
+    t.integer  "inst_module_id",  null: false
+    t.integer  "module_position"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "inst_chapters", force: true do |t|
+    t.integer  "inst_book_id",                        null: false
+    t.string   "name",                    limit: 100, null: false
+    t.string   "short_display_name",      limit: 45
+    t.integer  "position",                            null: false
+    t.integer  "lms_chapter_id"
+    t.integer  "lms_assignment_group_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "inst_modules", force: true do |t|
+    t.integer  "inst_chapter_id", null: false
+    t.integer  "inst_module_id",  null: false
+    t.integer  "module_position"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "inst_sections", force: true do |t|
+    t.integer  "inst_module_id",                                            null: false
+    t.integer  "inst_chapter_module_id",                                    null: false
+    t.string   "short_display_name",     limit: 50,                         null: false
+    t.text     "name",                   limit: 2147483647,                 null: false
+    t.integer  "position"
+    t.boolean  "gradable",                                  default: false
+    t.datetime "soft_deadline"
+    t.datetime "hard_deadline"
+    t.integer  "time_limit"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "languages", force: true do |t|
     t.string   "name"
@@ -170,6 +257,99 @@ ActiveRecord::Schema.define(version: 20160523003617) do
   end
 
   add_index "lms_types", ["name"], name: "index_lms_types_on_name", unique: true, using: :btree
+
+  create_table "odsa_book_progresses", force: true do |t|
+    t.integer  "user_id",                                     null: false
+    t.integer  "book_id",                                     null: false
+    t.text     "started_exercises",        limit: 2147483647, null: false
+    t.text     "all_proficient_exercises", limit: 2147483647, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "odsa_bugs", force: true do |t|
+    t.integer  "user_id",                           null: false
+    t.string   "os_family",      limit: 50,         null: false
+    t.string   "browser_family", limit: 20,         null: false
+    t.string   "title",          limit: 50,         null: false
+    t.text     "description",    limit: 2147483647, null: false
+    t.string   "screenshot",     limit: 100
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "odsa_exercise_attempts", force: true do |t|
+    t.integer  "user_id",                                                          null: false
+    t.integer  "inst_book_section_exercise_id",                                    null: false
+    t.boolean  "correct",                                                          null: false
+    t.datetime "time_done",                                                        null: false
+    t.integer  "time_taken",                                                       null: false
+    t.integer  "count_hints",                                                      null: false
+    t.boolean  "hint_used",                                                        null: false
+    t.decimal  "points_earned",                            precision: 5, scale: 2, null: false
+    t.boolean  "earned_proficiency",                                               null: false
+    t.integer  "count_attempts",                limit: 8,                          null: false
+    t.string   "ip_address",                    limit: 20,                         null: false
+    t.string   "ex_question",                   limit: 50,                         null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "odsa_exercise_progresses", force: true do |t|
+    t.integer  "user_id",                                               null: false
+    t.integer  "inst_book_section_exercise_id",                         null: false
+    t.integer  "streak",                                                null: false
+    t.integer  "longest_streak",                                        null: false
+    t.datetime "first_done",                                            null: false
+    t.datetime "last_done",                                             null: false
+    t.integer  "total_done",                                            null: false
+    t.integer  "total_correct",                                         null: false
+    t.datetime "proficient_date",                                       null: false
+    t.decimal  "progress",                      precision: 5, scale: 2, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "odsa_module_progresses", force: true do |t|
+    t.integer  "user_id",         null: false
+    t.integer  "inst_book_id",    null: false
+    t.integer  "inst_module_id",  null: false
+    t.datetime "first_done",      null: false
+    t.datetime "last_done",       null: false
+    t.datetime "proficient_date", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "odsa_student_extensions", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "inst_section_id", null: false
+    t.datetime "soft_deadline"
+    t.datetime "hard_deadline"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "time_limit"
+    t.datetime "opening_date"
+  end
+
+  create_table "odsa_user_interactions", force: true do |t|
+    t.integer  "inst_book_id",                                     null: false
+    t.integer  "user_id",                                          null: false
+    t.integer  "inst_section_id",                                  null: false
+    t.integer  "inst_book_section_exercise_id",                    null: false
+    t.string   "name",                          limit: 50,         null: false
+    t.text     "description",                   limit: 2147483647, null: false
+    t.datetime "action_time",                                      null: false
+    t.integer  "uiid",                          limit: 8,          null: false
+    t.string   "browser_family",                limit: 20,         null: false
+    t.string   "browser_version",               limit: 20,         null: false
+    t.string   "os_family",                     limit: 50,         null: false
+    t.string   "os_version",                    limit: 20,         null: false
+    t.string   "device",                        limit: 50,         null: false
+    t.string   "ip_address",                    limit: 20,         null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "organizations", force: true do |t|
     t.string   "name",         null: false
