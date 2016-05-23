@@ -1,7 +1,7 @@
 ActiveAdmin.register LatePolicy do
   active_admin_import
 
-  menu parent: 'University-oriented', priority: 250
+  menu parent: 'University-oriented', priority: 70
   permit_params :name, :late_days, :late_percent
   actions :all, except: [:destroy]
 

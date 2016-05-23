@@ -137,12 +137,14 @@ ActiveRecord::Schema.define(version: 20160523150926) do
 
   create_table "inst_book_owners", force: true do |t|
     t.integer  "user_id",      null: false
+    t.integer  "inst_book_id", null: false
     t.integer  "book_role_id", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "inst_book_owners", ["book_role_id"], name: "inst_book_owners_book_role_id_fk", using: :btree
+  add_index "inst_book_owners", ["inst_book_id", "user_id"], name: "index_inst_book_owners_on_inst_book_id_and_user_id", unique: true, using: :btree
   add_index "inst_book_owners", ["user_id"], name: "inst_book_owners_user_id_fk", using: :btree
 
   create_table "inst_book_section_exercises", force: true do |t|
@@ -160,15 +162,14 @@ ActiveRecord::Schema.define(version: 20160523150926) do
 
   create_table "inst_books", force: true do |t|
     t.integer  "course_offering_id",            null: false
-    t.integer  "inst_book_owner_id",            null: false
     t.string   "title",              limit: 50, null: false
     t.string   "book_url",           limit: 80, null: false
+    t.string   "book_code",          limit: 80, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "inst_books", ["course_offering_id"], name: "inst_books_course_offering_id_fk", using: :btree
-  add_index "inst_books", ["inst_book_owner_id"], name: "inst_books_inst_book_owner_id_fk", using: :btree
 
   create_table "inst_chapter_modules", force: true do |t|
     t.integer  "inst_chapter_id", null: false
@@ -254,7 +255,7 @@ ActiveRecord::Schema.define(version: 20160523150926) do
     t.integer  "user_id"
   end
 
-  add_index "lms_accesses", ["access_token"], name: "index_lms_accesses_on_access_token", unique: true, using: :btree
+  add_index "lms_accesses", ["lms_instance_id", "access_token"], name: "index_lms_accesses_on_lms_instance_id_and_access_token", unique: true, using: :btree
   add_index "lms_accesses", ["lms_instance_id", "user_id"], name: "index_lms_accesses_on_lms_instance_id_and_user_id", unique: true, using: :btree
   add_index "lms_accesses", ["user_id"], name: "lms_accesses_user_id_fk", using: :btree
 
@@ -469,6 +470,7 @@ ActiveRecord::Schema.define(version: 20160523150926) do
   add_foreign_key "identities", "users", name: "identities_user_id_fk", dependent: :delete
 
   add_foreign_key "inst_book_owners", "book_roles", name: "inst_book_owners_book_role_id_fk"
+  add_foreign_key "inst_book_owners", "inst_books", name: "inst_book_owners_inst_book_id_fk"
   add_foreign_key "inst_book_owners", "users", name: "inst_book_owners_user_id_fk"
 
   add_foreign_key "inst_book_section_exercises", "inst_books", name: "inst_book_section_exercises_inst_book_id_fk"
@@ -476,7 +478,6 @@ ActiveRecord::Schema.define(version: 20160523150926) do
   add_foreign_key "inst_book_section_exercises", "inst_sections", name: "inst_book_section_exercises_inst_section_id_fk"
 
   add_foreign_key "inst_books", "course_offerings", name: "inst_books_course_offering_id_fk"
-  add_foreign_key "inst_books", "inst_book_owners", name: "inst_books_inst_book_owner_id_fk"
 
   add_foreign_key "inst_chapter_modules", "inst_chapters", name: "inst_chapter_modules_inst_chapter_id_fk"
   add_foreign_key "inst_chapter_modules", "inst_modules", name: "inst_chapter_modules_inst_module_id_fk"

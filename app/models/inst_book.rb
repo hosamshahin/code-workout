@@ -9,7 +9,8 @@ class InstBook < ActiveRecord::Base
 
   #~ Relationships ............................................................
   belongs_to :course_offering
-  belongs_to :inst_book_owner
+  # has_many    :inst_book_owners, inverse_of: :inst_book
+  has_many    :inst_book_owners, inverse_of: :inst_book
   has_many :inst_book_section_exercises
   has_many :inst_chapters
   has_many :odsa_module_progresses

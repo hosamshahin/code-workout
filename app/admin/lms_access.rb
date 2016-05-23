@@ -3,7 +3,7 @@ ActiveAdmin.register LmsAccess do
   includes :lms_instance, :user
   active_admin_import
 
-  menu parent: 'University-oriented', priority: 240
+  menu parent: 'LMS config', priority: 30
   permit_params :lms_instance_id, :user_id, :access_token
 
   index do

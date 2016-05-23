@@ -55,6 +55,11 @@ class CourseOffering < ActiveRecord::Base
   #~ Public instance methods ..................................................
 
   # -------------------------------------------------------------
+
+  def admin_display_name
+    "#{course.organization.abbreviation} #{term.slug} #{course.number} (#{label})"
+  end
+
   def display_name
     "#{course.number} (#{label})"
   end

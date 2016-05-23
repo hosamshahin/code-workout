@@ -1,7 +1,7 @@
 ActiveAdmin.register LmsType do
   active_admin_import
 
-  menu parent: 'University-oriented', priority: 210
+  menu parent: 'LMS config', priority: 10
   permit_params :name
   actions :all, except: [:destroy]
 
