@@ -34,7 +34,7 @@ class OrganizationsController < ApplicationController
       includes(courses: :course_offerings).
       joins(courses: :course_offerings).
       where('course_offerings.term_id' => @term).
-      find(params[:id])
+      find(params[:id]) rescue nil
   end
 
 

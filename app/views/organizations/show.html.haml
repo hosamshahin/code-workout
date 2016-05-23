@@ -3,7 +3,7 @@
 %h1
   = @term.display_name
   Courses from
-  = @organization.name
+  = @organization.name if @organization
 
 %p
   Switch to a different term:
@@ -13,7 +13,7 @@
     class: 'form-control inline'
 
 %ul
-  - if @organization.courses.any?
+  - if @organization && @organization.courses.any?
     - @organization.courses.each do |course|
       %li
         = link_to course.number_and_name,

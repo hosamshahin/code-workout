@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160512005525) do
+ActiveRecord::Schema.define(version: 20160523003617) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -48,9 +48,11 @@ ActiveRecord::Schema.define(version: 20160512005525) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.date     "cutoff_date"
+    t.integer  "late_policy_id"
   end
 
   add_index "course_offerings", ["course_id"], name: "index_course_offerings_on_course_id", using: :btree
+  add_index "course_offerings", ["late_policy_id"], name: "course_offerings_late_policy_id_fk", using: :btree
   add_index "course_offerings", ["term_id"], name: "index_course_offerings_on_term_id", using: :btree
 
   create_table "course_roles", force: true do |t|
@@ -129,6 +131,46 @@ ActiveRecord::Schema.define(version: 20160512005525) do
     t.datetime "updated_at"
   end
 
+  create_table "late_policies", force: true do |t|
+    t.string   "name",         null: false
+    t.integer  "late_days",    null: false
+    t.integer  "late_percent", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "late_policies", ["name"], name: "index_late_policies_on_name", unique: true, using: :btree
+
+  create_table "lms_accesses", force: true do |t|
+    t.string   "access_token",    null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "lms_instance_id"
+    t.integer  "user_id"
+  end
+
+  add_index "lms_accesses", ["access_token"], name: "index_lms_accesses_on_access_token", unique: true, using: :btree
+  add_index "lms_accesses", ["lms_instance_id"], name: "lms_accesses_lms_instance_id_fk", using: :btree
+  add_index "lms_accesses", ["user_id"], name: "lms_accesses_user_id_fk", using: :btree
+
+  create_table "lms_instances", force: true do |t|
+    t.string   "url",         null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "lms_type_id"
+  end
+
+  add_index "lms_instances", ["lms_type_id"], name: "lms_instances_lms_type_id_fk", using: :btree
+  add_index "lms_instances", ["url"], name: "index_lms_instances_on_url", unique: true, using: :btree
+
+  create_table "lms_types", force: true do |t|
+    t.string   "name",       null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "lms_types", ["name"], name: "index_lms_types_on_name", unique: true, using: :btree
+
   create_table "organizations", force: true do |t|
     t.string   "name",         null: false
     t.datetime "created_at"
@@ -198,11 +240,17 @@ ActiveRecord::Schema.define(version: 20160512005525) do
   add_foreign_key "course_enrollments", "users", name: "course_enrollments_user_id_fk", dependent: :delete
 
   add_foreign_key "course_offerings", "courses", name: "course_offerings_course_id_fk", dependent: :delete
+  add_foreign_key "course_offerings", "late_policies", name: "course_offerings_late_policy_id_fk"
   add_foreign_key "course_offerings", "terms", name: "course_offerings_term_id_fk", dependent: :delete
 
   add_foreign_key "courses", "organizations", name: "courses_organization_id_fk", dependent: :delete
 
   add_foreign_key "identities", "users", name: "identities_user_id_fk", dependent: :delete
+
+  add_foreign_key "lms_accesses", "lms_instances", name: "lms_accesses_lms_instance_id_fk"
+  add_foreign_key "lms_accesses", "users", name: "lms_accesses_user_id_fk"
+
+  add_foreign_key "lms_instances", "lms_types", name: "lms_instances_lms_type_id_fk"
 
   add_foreign_key "users", "global_roles", name: "users_global_role_id_fk"
   add_foreign_key "users", "time_zones", name: "users_time_zone_id_fk"

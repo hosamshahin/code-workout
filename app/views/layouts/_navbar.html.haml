@@ -31,6 +31,8 @@
             = link_to destroy_user_session_path, method: :delete do
               %i.fa.fa-sign-out
         - else
+          %li
+            = link_to 'Sign up', '/signup'
           %li.dropdown
             %a.dropdown-toggle{ href: '/signin',
               data: { toggle: 'dropdown' }, value: 'Sign in' }

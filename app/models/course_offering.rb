@@ -27,9 +27,8 @@ class CourseOffering < ActiveRecord::Base
 
   belongs_to :course, inverse_of: :course_offerings
   belongs_to :term, inverse_of: :course_offerings
-  # has_many :workout_offerings, inverse_of: :course_offering,
-  #   dependent: :destroy
-  # has_many :workouts, through: :workout_offerings
+  belongs_to :late_policy, inverse_of: :course_offerings
+
   has_many :course_enrollments,
     -> { includes(:course_role, :user).order(
       'course_roles.id ASC', 'users.last_name ASC', 'users.first_name ASC') },
