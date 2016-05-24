@@ -161,7 +161,7 @@ ActiveRecord::Schema.define(version: 20160523150926) do
   add_index "inst_book_section_exercises", ["inst_section_id"], name: "inst_book_section_exercises_inst_section_id_fk", using: :btree
 
   create_table "inst_books", force: true do |t|
-    t.integer  "course_offering_id",            null: false
+    t.integer  "course_offering_id"
     t.string   "title",              limit: 50, null: false
     t.string   "book_url",           limit: 80, null: false
     t.string   "book_code",          limit: 80, null: false
@@ -186,7 +186,7 @@ ActiveRecord::Schema.define(version: 20160523150926) do
     t.integer  "inst_book_id",                        null: false
     t.string   "name",                    limit: 100, null: false
     t.string   "short_display_name",      limit: 45
-    t.integer  "position",                            null: false
+    t.integer  "position"
     t.integer  "lms_chapter_id"
     t.integer  "lms_assignment_group_id"
     t.datetime "created_at"
@@ -196,10 +196,10 @@ ActiveRecord::Schema.define(version: 20160523150926) do
   add_index "inst_chapters", ["inst_book_id"], name: "inst_chapters_inst_book_id_fk", using: :btree
 
   create_table "inst_exercises", force: true do |t|
-    t.string   "name",               limit: 50,         null: false
+    t.string   "name",               limit: 50, null: false
     t.string   "short_display_name", limit: 45
-    t.string   "ex_type",            limit: 50,         null: false
-    t.text     "description",        limit: 2147483647, null: false
+    t.string   "ex_type",            limit: 50
+    t.string   "description"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -207,20 +207,21 @@ ActiveRecord::Schema.define(version: 20160523150926) do
   add_index "inst_exercises", ["name"], name: "index_inst_exercises_on_name", unique: true, using: :btree
 
   create_table "inst_modules", force: true do |t|
-    t.integer  "inst_chapter_id", null: false
-    t.integer  "inst_module_id",  null: false
-    t.integer  "module_position"
+    t.string   "name",                          null: false
+    t.string   "short_display_name", limit: 50
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
+  add_index "inst_modules", ["name"], name: "index_inst_modules_on_name", unique: true, using: :btree
+
   create_table "inst_sections", force: true do |t|
-    t.integer  "inst_module_id",                                            null: false
-    t.integer  "inst_chapter_module_id",                                    null: false
-    t.string   "short_display_name",     limit: 50,                         null: false
-    t.text     "name",                   limit: 2147483647,                 null: false
+    t.integer  "inst_module_id",                                    null: false
+    t.integer  "inst_chapter_module_id",                            null: false
+    t.string   "short_display_name",     limit: 50
+    t.string   "name",                                              null: false
     t.integer  "position"
-    t.boolean  "gradable",                                  default: false
+    t.boolean  "gradable",                          default: false
     t.datetime "soft_deadline"
     t.datetime "hard_deadline"
     t.integer  "time_limit"

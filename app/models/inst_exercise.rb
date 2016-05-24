@@ -1,24 +1,25 @@
-class InstChapter < ActiveRecord::Base
+class InstExercise < ActiveRecord::Base
   #~ Relationships ............................................................
-  belongs_to :inst_book
-  has_many :inst_chapter_modules
+  has_many :inst_book_section_exercises
 
   #~ Validation ...............................................................
   #~ Constants ................................................................
   #~ Hooks ....................................................................
   #~ Class methods ............................................................
-  def self.save_data_from_json(book, chapter_name, chapter_obj, chapter_position)
-    ch = InstChapter.new
-    ch.inst_book_id = book.id
-    ch.name = chapter_name
-    ch.position = chapter_position
-    ch.save
-
-    mod_position = 0
-    chapter_obj.each do |k, v|
-      inst_module = InstModule.save_data_from_json(book, ch, k, v, mod_position)
-      mod_position += 1
+  def self.save_data_from_json(book, inst_section, exercise_name, exercise_obj)
+    ex = InstExercise.find_by name: exercise_name
+    if !ex
+      ex = InstExercise.new
+      ex.name = exercise_name
+      ex.save
     end
+
+    book_sec_ex = InstBookSectionExercise.new
+    book_sec_ex.inst_book_id = book.id
+    book_sec_ex.inst_section_id = inst_section.id
+    book_sec_ex.inst_exercise_id = ex.id
+    book_sec_ex.points = exercise_obj['points'] || 0
+    book_sec_ex.save
   end
   #~ Instance methods .........................................................
   #~ Private instance methods .................................................

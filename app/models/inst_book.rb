@@ -25,6 +25,23 @@ class InstBook < ActiveRecord::Base
   #~ Constants ................................................................
   #~ Hooks ....................................................................
   #~ Class methods ............................................................
+  def self.save_data_from_json(json)
+    book_data = json
+    b = InstBook.new
+    b.title = book_data['title']
+    b.book_url = book_data['book_url']
+    b.book_code = book_data['book_code']
+    b.save
+
+    chapters = book_data['chapters']
+
+    ch_position = 0
+    chapters.each do |k,v|
+      inst_chapter = InstChapter.save_data_from_json(b, k, v, ch_position)
+      ch_position += 1
+    end
+  end
+
   #~ Instance methods .........................................................
   #~ Private instance methods .................................................
 end

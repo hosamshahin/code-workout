@@ -21,6 +21,9 @@
                     - current_user.courses_for_term(term).each do |c|
                       %li= link_to c.display_name,
                         organization_course_path(c.organization, c, term)
+        - if user_signed_in?
+          - if current_user.global_role.can_edit_system_configuration?
+            %li= link_to 'Upload Books', '/inst_books/upload'
 
       %ul.nav.navbar-nav.navbar-right.nav-top
         - if user_signed_in?

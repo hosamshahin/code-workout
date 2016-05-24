@@ -14,6 +14,18 @@ class InstSection < ActiveRecord::Base
   #~ Constants ................................................................
   #~ Hooks ....................................................................
   #~ Class methods ............................................................
+  def self.save_data_from_json(book, module_rec, inst_chapter_module_rec, section_name, section_obj, section_position)
+    inst_sec = InstSection.new
+    inst_sec.inst_module_id = module_rec.id
+    inst_sec.inst_chapter_module_id = inst_chapter_module_rec.id
+    inst_sec.name = section_name
+    inst_sec.position = section_position
+    inst_sec.save
+
+    section_obj.each do |k, v|
+      exercise = InstExercise.save_data_from_json(book, inst_sec, k, v) if v.is_a?(Hash)
+    end
+  end
   #~ Instance methods .........................................................
   #~ Private instance methods .................................................
 end
