@@ -222,24 +222,6 @@ class InstBooksController < ApplicationController
   def upload_create
     hash = JSON.load(File.read(params[:form][:file].path))
     InstBook.save_data_from_json(hash)
-    # hash.to_json
-    puts hash
-    # exercises = ExerciseRepresenter.for_collection.new([]).from_hash(hash)
-    # exercises.each do |e|
-    #   if !e.save
-    #     # FIXME: Add these to alert message that can be sent back to user
-    #     puts 'cannot save exercise, name = ' + e.name.to_s +
-    #       ', external_id = ' + e.external_id.to_s + ': ' +
-    #       e.errors.full_messages.to_s
-    #     if e.current_version
-    #       puts "    #{e.current_version.errors.full_messages.to_s}"
-    #       if e.current_version.prompts.any?
-    #         puts "    #{e.current_version.prompts.first.errors.full_messages.to_s}"
-    #       end
-    #     end
-    #   end
-    # end
-
     redirect_to inst_books_url + '/upload', notice: 'Exercise upload complete.'
   end
 
